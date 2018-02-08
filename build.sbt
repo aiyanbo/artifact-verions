@@ -8,8 +8,4 @@ organization := "org.jmotor.artifact"
 
 scalaVersion := Versions.scala212
 
-crossScalaVersions := Seq(Versions.scala211, Versions.scala212)
-
 libraryDependencies ++= dependencies
-
-enablePlugins(Formatting)
