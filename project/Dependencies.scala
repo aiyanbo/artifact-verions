@@ -10,7 +10,7 @@ object Dependencies {
     val scalaTest = "3.0.5"
     val scalaLogging = "3.7.2"
     val mavenArtifact = "3.5.2"
-    val searchMavenSdk = "1.0.0-SNAPSHOT"
+    val searchMavenSdk = "1.0.0"
   }
 
   object Compile {
