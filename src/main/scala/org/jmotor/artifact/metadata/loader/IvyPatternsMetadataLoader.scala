@@ -6,6 +6,7 @@ import org.apache.ivy.core.IvyPatternHelper
 import org.apache.maven.artifact.versioning.{ ArtifactVersion, DefaultArtifactVersion }
 import org.asynchttpclient.util.HttpConstants.ResponseStatusCodes
 import org.asynchttpclient.{ AsyncHttpClient, Realm }
+import org.jmotor.artifact.exception.ArtifactMetadataLoadException
 import org.jmotor.artifact.http.RequestBuilder._
 import org.jmotor.artifact.metadata.MetadataLoader
 import org.jmotor.tools.http.AsyncHttpClientConversions._
@@ -32,12 +33,19 @@ class IvyPatternsMetadataLoader(patterns: Seq[String], realm: Option[Realm])
       client.prepareGet(url).ensure(realm).toFuture
     }
     Future.sequence(futures).map { responses ⇒
-      responses.collect {
-        case r if r.getStatusCode == ResponseStatusCodes.OK_200 ⇒
-          regex.findAllMatchIn(r.getResponseBody).map(_.group(1)).map { version ⇒
-            new DefaultArtifactVersion(version)
-          }
-      } flatten
+      if (responses.exists(_.getStatusCode == ResponseStatusCodes.OK_200)) {
+        responses.collect {
+          case r if r.getStatusCode == ResponseStatusCodes.OK_200 ⇒
+            regex.findAllMatchIn(r.getResponseBody).map(_.group(1)).map { version ⇒
+              new DefaultArtifactVersion(version)
+            }
+        } flatten
+      } else {
+        val errors = responses.map { response ⇒
+          s"${response.getStatusCode} ${response.getStatusText}: ${response.getUri.toUrl}"
+        } mkString "\n"
+        throw ArtifactMetadataLoadException(errors)
+      }
     }
   }
 
