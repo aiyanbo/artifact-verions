@@ -6,7 +6,7 @@ import org.apache.ivy.core.IvyPatternHelper
 import org.apache.maven.artifact.versioning.{ ArtifactVersion, DefaultArtifactVersion }
 import org.asynchttpclient.util.HttpConstants.ResponseStatusCodes
 import org.asynchttpclient.{ AsyncHttpClient, Realm }
-import org.jmotor.artifact.exception.ArtifactMetadataLoadException
+import org.jmotor.artifact.exception.{ ArtifactMetadataLoadException, ArtifactNotFoundException }
 import org.jmotor.artifact.http.RequestBuilder._
 import org.jmotor.artifact.metadata.MetadataLoader
 import org.jmotor.tools.http.AsyncHttpClientConversions._
@@ -39,12 +39,16 @@ class IvyPatternsMetadataLoader(patterns: Seq[String], realm: Option[Realm])
             regex.findAllMatchIn(r.getResponseBody).map(_.group(1)).map { version ⇒
               new DefaultArtifactVersion(version)
             }
-        } flatten
+        }.flatten
       } else {
-        val errors = responses.map { response ⇒
-          s"${response.getStatusCode} ${response.getStatusText}: ${response.getUri.toUrl}"
-        } mkString "\n"
-        throw ArtifactMetadataLoadException(errors)
+        if (responses.forall(_.getStatusCode == 404)) {
+          throw ArtifactNotFoundException(organization, artifactId)
+        } else {
+          val errors = responses.map { response ⇒
+            s"${response.getStatusCode} ${response.getStatusText}: ${response.getUri.toUrl}"
+          } mkString "\n"
+          throw ArtifactMetadataLoadException(errors)
+        }
       }
     }
   }

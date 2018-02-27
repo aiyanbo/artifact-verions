@@ -2,6 +2,7 @@ package org.jmotor.artifact.metadata.loader
 
 import org.apache.maven.artifact.versioning.{ ArtifactVersion, DefaultArtifactVersion }
 import org.asynchttpclient.AsyncHttpClient
+import org.jmotor.artifact.exception.ArtifactNotFoundException
 import org.jmotor.artifact.metadata.MetadataLoader
 import org.jmotor.tools.MavenSearchClient
 import org.jmotor.tools.dto.MavenSearchRequest
@@ -21,9 +22,10 @@ class MavenSearchMetadataLoader(implicit httpClient: AsyncHttpClient, ec: Execut
 
   override def getVersions(organization: String, artifactId: String): Future[Seq[ArtifactVersion]] = {
     val request = MavenSearchRequest(organization, artifactId, MAX_ROWS)
-    client.search(request).map(_.map { artifact ⇒
-      new DefaultArtifactVersion(artifact.v)
-    })
+    client.search(request).map {
+      case artifacts if artifacts.isEmpty ⇒ throw ArtifactNotFoundException(organization, artifactId)
+      case artifacts                      ⇒ artifacts.map(a ⇒ new DefaultArtifactVersion(a.v))
+    }
   }
 
 }

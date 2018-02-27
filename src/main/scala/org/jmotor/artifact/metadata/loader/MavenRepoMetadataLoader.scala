@@ -6,7 +6,7 @@ import java.nio.file.Paths
 import org.apache.maven.artifact.versioning.{ ArtifactVersion, DefaultArtifactVersion }
 import org.asynchttpclient.util.HttpConstants.ResponseStatusCodes
 import org.asynchttpclient.{ AsyncHttpClient, Realm }
-import org.jmotor.artifact.exception.ArtifactMetadataLoadException
+import org.jmotor.artifact.exception.{ ArtifactMetadataLoadException, ArtifactNotFoundException }
 import org.jmotor.artifact.http.RequestBuilder._
 import org.jmotor.artifact.metadata.MetadataLoader
 import org.jmotor.tools.http.AsyncHttpClientConversions._
@@ -35,7 +35,8 @@ class MavenRepoMetadataLoader(url: String, realm: Option[Realm])
         case r if r.getStatusCode == ResponseStatusCodes.OK_200 ⇒
           val xml = XML.load(r.getResponseBodyAsStream)
           xml \ "versioning" \ "versions" \ "version" map (node ⇒ new DefaultArtifactVersion(node.text))
-        case r ⇒ throw ArtifactMetadataLoadException(s"${r.getStatusCode} ${r.getStatusText}: ${r.getUri.toUrl}")
+        case r if r.getStatusCode == 404 ⇒ throw ArtifactNotFoundException(organization, artifactId)
+        case r                           ⇒ throw ArtifactMetadataLoadException(s"${r.getStatusCode} ${r.getStatusText}: ${r.getUri.toUrl}")
       }
   }
 

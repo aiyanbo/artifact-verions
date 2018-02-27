@@ -2,7 +2,7 @@ import Dependencies._
 
 name := "artifact-versions"
 
-version := "1.0.0"
+version := "1.0.1"
 
 organization := "org.jmotor.artifact"
 
