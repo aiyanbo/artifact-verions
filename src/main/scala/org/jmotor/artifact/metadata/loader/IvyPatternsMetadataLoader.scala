@@ -25,8 +25,8 @@ class IvyPatternsMetadataLoader(patterns: Seq[String], realm: Option[Realm])
 
   private[this] lazy val regex = """<a(?:onclick="navi\(event\)")? href=":?([^/]*)/"(?: rel="nofollow")?>\1/</a>""".r
 
-  override def getVersions(organization: String, artifactId: String): Future[Seq[ArtifactVersion]] = {
-    val urls = patterns.map(pattern ⇒ getRevisionUrl(pattern, organization, artifactId)).collect {
+  override def getVersions(organization: String, artifactId: String, attrs: Map[String, String]): Future[Seq[ArtifactVersion]] = {
+    val urls = patterns.map(pattern ⇒ getRevisionUrl(pattern, organization, artifactId, attrs)).collect {
       case Some(url) ⇒ url
     }
     val futures = urls.map { url ⇒
@@ -53,10 +53,14 @@ class IvyPatternsMetadataLoader(patterns: Seq[String], realm: Option[Realm])
     }
   }
 
-  private def getRevisionUrl(pattern: String, organization: String, artifactId: String): Option[String] = {
+  private def getRevisionUrl(pattern: String, organization: String, artifactId: String, attrs: Map[String, String]): Option[String] = {
     val tokens = new util.HashMap[String, String]()
+    tokens.put(IvyPatternHelper.ORGANISATION_KEY, organization)
     tokens.put(IvyPatternHelper.ORGANISATION_KEY2, organization)
     tokens.put(IvyPatternHelper.MODULE_KEY, artifactId)
+    attrs.foreach {
+      case (k, v) ⇒ tokens.put(k, v)
+    }
     val substituted = IvyPatternHelper.substituteTokens(pattern, tokens)
     if (IvyPatternHelper.getFirstToken(substituted) == IvyPatternHelper.REVISION_KEY) {
       Some(IvyPatternHelper.getTokenRoot(substituted))

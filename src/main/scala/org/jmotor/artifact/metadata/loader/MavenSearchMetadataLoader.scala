@@ -20,7 +20,7 @@ class MavenSearchMetadataLoader(implicit httpClient: AsyncHttpClient, ec: Execut
   private[this] lazy final val MAX_ROWS = 10
   private[this] lazy val client = MavenSearchClient(httpClient)
 
-  override def getVersions(organization: String, artifactId: String): Future[Seq[ArtifactVersion]] = {
+  override def getVersions(organization: String, artifactId: String, attrs: Map[String, String]): Future[Seq[ArtifactVersion]] = {
     val request = MavenSearchRequest(organization, artifactId, MAX_ROWS)
     client.search(request).map {
       case artifacts if artifacts.isEmpty ⇒ throw ArtifactNotFoundException(organization, artifactId)

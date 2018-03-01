@@ -13,6 +13,6 @@ import scala.concurrent.Future
  */
 trait MetadataLoader {
 
-  def getVersions(organization: String, artifactId: String): Future[Seq[ArtifactVersion]]
+  def getVersions(organization: String, artifactId: String, attrs: Map[String, String] = Map.empty): Future[Seq[ArtifactVersion]]
 
 }

@@ -29,7 +29,7 @@ class MavenRepoMetadataLoader(url: String, realm: Option[Realm])
     u.getProtocol + "://" -> url.replace(s"${u.getProtocol}://", "")
   }
 
-  override def getVersions(organization: String, artifactId: String): Future[Seq[ArtifactVersion]] = {
+  override def getVersions(organization: String, artifactId: String, attrs: Map[String, String]): Future[Seq[ArtifactVersion]] = {
     client.prepareGet(
       protocol + Paths.get(base, organization.split('.').mkString("/"), artifactId, "maven-metadata.xml").toString).ensure(realm).toFuture.map {
         case r if r.getStatusCode == ResponseStatusCodes.OK_200 ⇒
