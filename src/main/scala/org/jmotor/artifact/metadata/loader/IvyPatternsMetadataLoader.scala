@@ -1,7 +1,5 @@
 package org.jmotor.artifact.metadata.loader
 
-import java.util
-
 import org.apache.ivy.core.IvyPatternHelper
 import org.apache.maven.artifact.versioning.{ ArtifactVersion, DefaultArtifactVersion }
 import org.asynchttpclient.util.HttpConstants.ResponseStatusCodes
@@ -11,6 +9,7 @@ import org.jmotor.artifact.http.RequestBuilder._
 import org.jmotor.artifact.metadata.MetadataLoader
 import org.jmotor.tools.http.AsyncHttpClientConversions._
 
+import scala.collection.JavaConverters._
 import scala.concurrent.{ ExecutionContext, Future }
 
 /**
@@ -54,14 +53,11 @@ class IvyPatternsMetadataLoader(patterns: Seq[String], realm: Option[Realm])
   }
 
   private def getRevisionUrl(pattern: String, organization: String, artifactId: String, attrs: Map[String, String]): Option[String] = {
-    val tokens = new util.HashMap[String, String]()
-    tokens.put(IvyPatternHelper.ORGANISATION_KEY, organization)
-    tokens.put(IvyPatternHelper.ORGANISATION_KEY2, organization)
-    tokens.put(IvyPatternHelper.MODULE_KEY, artifactId)
-    attrs.foreach {
-      case (k, v) ⇒ tokens.put(k, v)
-    }
-    val substituted = IvyPatternHelper.substituteTokens(pattern, tokens)
+    val tokens = attrs +
+      (IvyPatternHelper.MODULE_KEY -> artifactId) +
+      (IvyPatternHelper.ORGANISATION_KEY -> organization) +
+      (IvyPatternHelper.ORGANISATION_KEY2 -> organization)
+    val substituted = IvyPatternHelper.substituteTokens(pattern, tokens.asJava)
     if (IvyPatternHelper.getFirstToken(substituted) == IvyPatternHelper.REVISION_KEY) {
       Some(IvyPatternHelper.getTokenRoot(substituted))
     } else {
