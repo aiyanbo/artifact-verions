@@ -15,13 +15,12 @@ import scala.concurrent.{ ExecutionContext, Future }
  *
  * @author AI
  */
-class MavenSearchMetadataLoader(implicit httpClient: AsyncHttpClient, ec: ExecutionContext) extends MetadataLoader {
+class MavenSearchMetadataLoader(maxRows: Int = 10)(implicit httpClient: AsyncHttpClient, ec: ExecutionContext) extends MetadataLoader {
 
-  private[this] lazy final val MAX_ROWS = 10
   private[this] lazy val client = MavenSearchClient(httpClient)
 
   override def getVersions(organization: String, artifactId: String, attrs: Map[String, String]): Future[Seq[ArtifactVersion]] = {
-    val request = MavenSearchRequest(organization, artifactId, MAX_ROWS)
+    val request = MavenSearchRequest(organization, artifactId, maxRows)
     client.search(request).map {
       case artifacts if artifacts.isEmpty ⇒ throw ArtifactNotFoundException(organization, artifactId)
       case artifacts                      ⇒ artifacts.map(a ⇒ new DefaultArtifactVersion(a.v))
