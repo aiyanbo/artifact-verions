@@ -1,5 +1,9 @@
 package org.jmotor.artifact
 
+import java.util.regex.Pattern
+
+import org.apache.maven.artifact.versioning.ArtifactVersion
+
 /**
  * Component:
  * Description:
@@ -9,6 +13,23 @@ package org.jmotor.artifact
  */
 object Versions {
 
-  lazy val UNRELEASED: Seq[String] = Seq("pr", "m", "beta", "rc", "alpha", "snapshot", "snap")
+  final lazy val UNRELEASED: Seq[String] = Seq("pr", "m", "beta", "rc", "alpha", "snapshot", "snap")
+
+  private[this] final lazy val jrePattern = s"jre\\d+".r.pattern
+
+  private[this] final lazy val UnreleasedPatterns: Seq[Pattern] = Versions.UNRELEASED.map(q ⇒ s"$q\\d+.*".r.pattern)
+
+  def isReleaseVersion(version: ArtifactVersion): Boolean = {
+    Option(version.getQualifier) match {
+      case None ⇒ true
+      case Some(qualifier) ⇒
+        val q = qualifier.toLowerCase
+        !(Versions.UNRELEASED.contains(q) || UnreleasedPatterns.exists(_.matcher(q).matches()))
+    }
+  }
+
+  def isJreQualifier(qualifier: String): Boolean = {
+    jrePattern.matcher(qualifier).matches()
+  }
 
 }

@@ -4,11 +4,13 @@ object Dependencies {
 
   object Versions {
     val ivy = "2.4.0"
-    val scalaXml = "1.1.0"
+    val scalaXml = "1.2.0"
+    val scala212 = "2.12.8"
+    val scala213 = "2.13.0"
+    val scalatest = "3.0.8"
     val scala211 = "2.11.11"
-    val scala212 = "2.12.6"
-    val scalaTest = "3.0.5"
-    val mavenArtifact = "3.5.4"
+    val scalaLibrary = "2.13.0"
+    val mavenArtifact = "3.6.1"
     val searchMavenSdk = "1.0.0"
   }
 
@@ -20,7 +22,7 @@ object Dependencies {
   }
 
   object Test {
-    val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % Versions.scalaTest % "test"
+    val scalaTest: ModuleID = "org.scalatest" %% "scalatest" % Versions.scalatest % "test"
   }
 
   import Compile._
