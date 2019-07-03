@@ -8,6 +8,7 @@ import org.jmotor.tools.MavenSearchClient
 import org.jmotor.tools.dto.MavenSearchRequest
 
 import scala.concurrent.{ ExecutionContext, Future }
+
 /**
  * Component:
  * Description:
@@ -15,9 +16,7 @@ import scala.concurrent.{ ExecutionContext, Future }
  *
  * @author AI
  */
-class MavenSearchMetadataLoader(maxRows: Int = 10)(implicit httpClient: AsyncHttpClient, ec: ExecutionContext) extends MetadataLoader {
-
-  private[this] lazy val client = MavenSearchClient(httpClient)
+class MavenSearchMetadataLoader(maxRows: Int, client: MavenSearchClient)(implicit ec: ExecutionContext) extends MetadataLoader {
 
   override def getVersions(organization: String, artifactId: String, attrs: Map[String, String]): Future[Seq[ArtifactVersion]] = {
     val request = MavenSearchRequest(organization, artifactId, maxRows)
@@ -25,6 +24,27 @@ class MavenSearchMetadataLoader(maxRows: Int = 10)(implicit httpClient: AsyncHtt
       case artifacts if artifacts.isEmpty ⇒ throw ArtifactNotFoundException(organization, artifactId)
       case artifacts                      ⇒ artifacts.map(a ⇒ new DefaultArtifactVersion(a.v))
     }
+  }
+
+}
+
+object MavenSearchMetadataLoader {
+
+  def apply()(implicit ec: ExecutionContext): MavenSearchMetadataLoader = {
+    val maxRows = 10
+    new MavenSearchMetadataLoader(maxRows, MavenSearchClient())
+  }
+
+  def apply(maxRows: Int)(implicit ec: ExecutionContext): MavenSearchMetadataLoader = {
+    new MavenSearchMetadataLoader(maxRows, MavenSearchClient())
+  }
+
+  def apply(maxRows: Int, client: MavenSearchClient)(implicit ec: ExecutionContext): MavenSearchMetadataLoader = {
+    new MavenSearchMetadataLoader(maxRows, client)
+  }
+
+  def apply(maxRows: Int, client: AsyncHttpClient)(implicit ec: ExecutionContext): MavenSearchMetadataLoader = {
+    new MavenSearchMetadataLoader(maxRows, MavenSearchClient(client))
   }
 
 }

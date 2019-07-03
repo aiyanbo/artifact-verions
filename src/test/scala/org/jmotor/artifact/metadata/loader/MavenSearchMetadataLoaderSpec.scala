@@ -18,7 +18,7 @@ class MavenSearchMetadataLoaderSpec extends FunSuite with TestContext {
   private[this] val a = "guava"
 
   test("get versions") {
-    val loader = new MavenSearchMetadataLoader()
+    val loader = MavenSearchMetadataLoader()
     val future = loader.getVersions(g, a)
     val version = new DefaultArtifactVersion("24.0-jre")
     val results = Await.result(future, 10.seconds).filter(av ⇒ version.getQualifier.equals(av.getQualifier))
@@ -26,7 +26,7 @@ class MavenSearchMetadataLoaderSpec extends FunSuite with TestContext {
   }
 
   test("sbt versions") {
-    val loader = new MavenSearchMetadataLoader()
+    val loader = MavenSearchMetadataLoader()
     val future = loader.getVersions("org.scala-sbt", "sbt")
     val version = new DefaultArtifactVersion("1.1.0")
     val results = Await.result(future, 10.seconds)
