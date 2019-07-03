@@ -17,4 +17,12 @@ class VersionsSpec extends FunSuite {
     assert(!Versions.isReleaseVersion(new DefaultArtifactVersion("2.0.0-RC2-1")))
   }
 
+  test("get latest release") {
+    val versions = Seq(
+      new DefaultArtifactVersion("3.9.0"),
+      new DefaultArtifactVersion("3.9.0-jre9"),
+      new DefaultArtifactVersion("3.8.0-jre10")
+    )
+    assert(Versions.latestRelease(versions).toString == "3.9.0")
+  }
 }

@@ -2,7 +2,7 @@ package org.jmotor.artifact
 
 import java.util.regex.Pattern
 
-import org.apache.maven.artifact.versioning.ArtifactVersion
+import org.apache.maven.artifact.versioning.{ ArtifactVersion, DefaultArtifactVersion }
 
 /**
  * Component:
@@ -26,6 +26,16 @@ object Versions {
         val q = qualifier.toLowerCase
         !(Versions.UNRELEASED.contains(q) || UnreleasedPatterns.exists(_.matcher(q).matches()))
     }
+  }
+
+  def latestRelease(versions: Seq[ArtifactVersion]): ArtifactVersion = {
+    versions.collect {
+      case av if isReleaseVersion(av) ⇒
+        Option(av.getQualifier).fold(av) {
+          case q if isJreQualifier(q) ⇒ new DefaultArtifactVersion(av.toString.replace(q, ""))
+          case _                      ⇒ av
+        }
+    }.max
   }
 
   def isJreQualifier(qualifier: String): Boolean = {
