@@ -6,7 +6,14 @@ name := "artifact-versions"
 
 organization := "org.jmotor.artifact"
 
-scalaVersion := Versions.scala212
+scalaVersion := Versions.scala213
+
+crossScalaVersions := Seq(Versions.scala212, Versions.scala213)
+
+dependencyUpgradeModuleNames := Map(
+  "scala-library" -> "scala",
+  "undertow-.*" -> "undertow"
+)
 
 libraryDependencies ++= dependencies
 

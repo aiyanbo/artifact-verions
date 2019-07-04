@@ -11,7 +11,7 @@ object Dependencies {
     val scala211 = "2.11.11"
     val scalaLibrary = "2.13.0"
     val mavenArtifact = "3.6.1"
-    val searchMavenSdk = "1.0.0"
+    val searchMavenSdk = "1.0.1"
   }
 
   object Compile {
