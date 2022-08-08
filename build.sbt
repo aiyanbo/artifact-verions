@@ -31,3 +31,5 @@ inThisBuild(List(
     )
   )
 ))
+
+ThisBuild / sonatypeProfileName := "org.jmotor"
