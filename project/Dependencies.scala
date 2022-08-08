@@ -3,14 +3,14 @@ import sbt._
 object Dependencies {
 
   object Versions {
-    val ivy = "2.4.0"
-    val scalaXml = "2.1.0"
+    val ivy = "2.5.0"
+    val mavenArtifact = "3.8.6"
+    val scala211 = "2.11.11"
     val scala212 = "2.12.16"
     val scala213 = "2.13.8"
-    val scalatest = "3.1.4"
-    val scala211 = "2.11.11"
     val scalaLibrary = "2.13.0"
-    val mavenArtifact = "3.6.1"
+    val scalaXml = "2.1.0"
+    val scalatest = "3.2.13"
     val searchMavenSdk = "1.0.1"
   }
 
