@@ -1,6 +1,5 @@
 import Dependencies.{Versions, _}
 import org.jmotor.sbt.plugin.ComponentSorter
-import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 name := "artifact-versions"
 
@@ -19,28 +18,16 @@ libraryDependencies ++= dependencies
 
 dependencyUpgradeComponentSorter := ComponentSorter.ByAlphabetically
 
-releasePublishArtifactsAction := PgpKeys.publishSigned.value
-
-releaseCrossBuild := true
-
-releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,
-  inquireVersions,
-  runClean,
-  runTest,
-  setReleaseVersion,
-  commitReleaseVersion,
-  tagRelease,
-  publishArtifacts,
-  setNextVersion,
-  commitNextVersion,
-  pushChanges
-)
-
-credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
-
-//publishTo := sonatypePublishToBundle.value
-
-//ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
-
-
+inThisBuild(List(
+  organization := "org.jmotor.artifact",
+  homepage := Some(url("https://github.com/aiyanbo/artifact-verions")),
+  licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+  developers := List(
+    Developer(
+      "aiyanbo",
+      "Andy Ai",
+      "yanbo.ai@gmail.com",
+      url("https://aiyanbo.github.io/")
+    )
+  )
+))
