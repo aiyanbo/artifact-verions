@@ -2,14 +2,14 @@ package org.jmotor.artifact.metadata
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 import org.jmotor.artifact.Versions
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 /**
  *
  * @author AI
  *         2019-07-04
  */
-class VersionsSpec extends FunSuite {
+class VersionsSpec extends AnyFunSuite {
 
   test("test rc version") {
     assert(Versions.isReleaseVersion(new DefaultArtifactVersion("3.9.0")))

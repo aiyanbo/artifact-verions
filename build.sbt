@@ -36,3 +36,11 @@ releaseProcess := Seq[ReleaseStep](
   commitNextVersion,
   pushChanges
 )
+
+credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
+
+//publishTo := sonatypePublishToBundle.value
+
+//ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
+
+

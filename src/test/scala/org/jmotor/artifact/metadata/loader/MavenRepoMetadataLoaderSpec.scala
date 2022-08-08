@@ -1,7 +1,7 @@
 package org.jmotor.artifact.metadata.loader
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -13,7 +13,7 @@ import scala.concurrent.duration._
  *
  * @author AI
  */
-class MavenRepoMetadataLoaderSpec extends FunSuite with TestContext {
+class MavenRepoMetadataLoaderSpec extends AnyFunSuite with TestContext {
   private[this] val g = "org.jmotor"
   private[this] val a = "scala-utils_2.12"
 
