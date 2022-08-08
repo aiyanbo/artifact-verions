@@ -19,7 +19,7 @@ libraryDependencies ++= dependencies
 dependencyUpgradeComponentSorter := ComponentSorter.ByAlphabetically
 
 inThisBuild(List(
-  organization := "org.jmotor",
+  sonatypeProfileName := "org.jmotor",
   homepage := Some(url("https://github.com/aiyanbo/artifact-verions")),
   licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
   developers := List(
@@ -31,5 +31,3 @@ inThisBuild(List(
     )
   )
 ))
-
-ThisBuild / sonatypeProfileName := "org.jmotor"
