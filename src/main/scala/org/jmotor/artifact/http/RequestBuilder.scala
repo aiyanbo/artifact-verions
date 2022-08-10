@@ -1,13 +1,12 @@
 package org.jmotor.artifact.http
 
-import org.asynchttpclient.{ BoundRequestBuilder, Realm }
+import org.asynchttpclient.{BoundRequestBuilder, Realm}
 
 /**
- * Component:
- * Description:
- * Date: 2018/2/8
+ * Component: Description: Date: 2018/2/8
  *
- * @author AI
+ * @author
+ *   AI
  */
 object RequestBuilder {
 
@@ -15,7 +14,7 @@ object RequestBuilder {
 
     implicit def ensure(realm: Option[Realm]): BoundRequestBuilder = {
       builder.setFollowRedirect(true)
-      realm.foreach(r ⇒ builder.setRealm(r))
+      realm.foreach(r => builder.setRealm(r))
       builder
     }
 
