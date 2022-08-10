@@ -2,7 +2,6 @@ package org.jmotor.artifact.metadata.loader
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 import org.jmotor.artifact.metadata.MetadataLoader
-import org.scalatest._
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.concurrent.Await
