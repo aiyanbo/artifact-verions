@@ -19,13 +19,14 @@ object Versions {
   private[this] final lazy val UnreleasedPatterns: Seq[Pattern] =
     Versions.UNRELEASED.map(q => s"$q[_-]?\\d+.*".r.pattern)
 
-  def isReleaseVersion(version: ArtifactVersion): Boolean =
+  def isReleaseVersion(version: ArtifactVersion): Boolean = {
     Option(version.getQualifier) match {
       case None => true
       case Some(qualifier) =>
         val q = qualifier.toLowerCase
         !(Versions.UNRELEASED.contains(q) || UnreleasedPatterns.exists(_.matcher(q).matches()))
     }
+  }
 
   def latestRelease(versions: Seq[ArtifactVersion]): ArtifactVersion =
     versions.collect {
@@ -36,7 +37,8 @@ object Versions {
         }
     }.max
 
-  def isJreQualifier(qualifier: String): Boolean =
+  def isJreQualifier(qualifier: String): Boolean = {
     jrePattern.matcher(qualifier).matches()
+  }
 
 }
