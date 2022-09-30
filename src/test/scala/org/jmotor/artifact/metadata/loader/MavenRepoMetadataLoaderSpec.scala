@@ -25,4 +25,8 @@ class MavenRepoMetadataLoaderSpec extends AnyFunSuite with TestContext {
     assert(results.max.compareTo(version) >= 0)
   }
 
+  test("") {
+
+  }
+
 }

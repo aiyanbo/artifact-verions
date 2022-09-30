@@ -1,23 +1,28 @@
 package org.jmotor.artifact.http
 
-import org.asynchttpclient.{BoundRequestBuilder, Realm}
+import okhttp3.{Authenticator, Dispatcher, OkHttpClient, Request, Response, Route}
 
 /**
  * Component: Description: Date: 2018/2/8
  *
  * @author
- *   AI
+ * AI
  */
-object RequestBuilder {
+object OkHttpClients {
 
-  implicit class BoundRequestBuilderSetting(builder: BoundRequestBuilder) {
-
-    implicit def ensure(realm: Option[Realm]): BoundRequestBuilder = {
-      builder.setFollowRedirect(true)
-      realm.foreach(r => builder.setRealm(r))
-      builder
-    }
-
+  def create(credentials: Option[String]): OkHttpClient = {
+    val dispatcher = new Dispatcher()
+    val concurrent = 1000
+    dispatcher.setMaxRequests(concurrent)
+    dispatcher.setMaxRequestsPerHost(concurrent)
+    new OkHttpClient.Builder().dispatcher(dispatcher).authenticator(new Authenticator {
+      override def authenticate(route: Route, response: Response): Request = {
+        credentials match {
+          case None => response.request()
+          case Some(v) => response.request().newBuilder().header("Authorization", v).build()
+        }
+      }
+    }).build()
   }
 
 }
